@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 1, Unit 1 - Practice Quiz</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            color: #1865F2;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
+        .progress-bar {
+            background: #e0e0e0;
+            height: 8px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            background: #1865F2;
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+        
+        .question-number {
+            color: #666;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        
+        .question-text {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 30px;
+            color: #333;
+        }
+        
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .option-btn {
+            background: white;
+            border: 2px solid #e0e0e0;
+            padding: 18px 24px;
+            border-radius: 12px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+        }
+        
+        .option-btn:hover:not(:disabled) {
+            border-color: #1865F2;
+            background: #f0f7ff;
+        }
+        
+        .option-btn.correct {
+            background: #10B981;
+            border-color: #10B981;
+            color: white;
+        }
+        
+        .option-btn.wrong {
+            background: #EF4444;
+            border-color: #EF4444;
+            color: white;
+            animation: shake 0.5s;
+        }
+        
+        .option-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+        
+        .feedback {
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            font-size: 18px;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .feedback.success {
+            background: #D1FAE5;
+            color: #065F46;
+        }
+        
+        .feedback.error {
+            background: #FEE2E2;
+            color: #991B1B;
+        }
+        
+        .explain-btn {
+            background: white;
+            border: 2px solid #1865F2;
+            color: #1865F2;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        
+        .explain-btn:hover {
+            background: #f0f7ff;
+        }
+        
+        .hint-box {
+            background: #FFF9E6;
+            border: 2px solid #F59E0B;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+        
+        .hint-label {
+            color: #F59E0B;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .hint-text {
+            color: #333;
+            line-height: 1.6;
+            white-space: pre-line;
+        }
+        
+        .next-btn {
+            background: #1865F2;
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+        }
+        
+        .next-btn:hover {
+            background: #1557D0;
+        }
+        
+        .summary {
+            text-align: center;
+        }
+        
+        .summary h2 {
+            color: #1865F2;
+            margin-bottom: 30px;
+        }
+        
+        .score-big {
+            font-size: 48px;
+            font-weight: 700;
+            color: #1865F2;
+            margin: 20px 0;
+        }
+        
+        .summary-details {
+            background: #f9fafb;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .summary-row:last-child {
+            border-bottom: none;
+        }
+        
+        .check {
+            color: #10B981;
+            font-size: 20px;
+        }
+        
+        .warning {
+            color: #F59E0B;
+            font-size: 20px;
+        }
+        
+        .confetti-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            animation: fall 2s ease-out forwards;
+        }
+        
+        @keyframes fall {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="confetti-container" id="confettiContainer"></div>
+    
+    <div class="container">
+        <h1>Week 1, Unit 1: Practice Quiz</h1>
+        <p class="subtitle">To Be & Introductions (Demo - 3 Questions)</p>
+        
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar"></div>
+        </div>
+        
+        <div id="quizContent"></div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                q: "I ___ a student.",
+                options: ["am", "is", "are"],
+                correct: 0,
+                hint1: "Remember: Use 'am' only with the pronoun 'I'. Example: I am happy, I am a teacher.",
+                hint2: "The correct answer is: am\n\nRule: I + am (always!)\nShe/He/It + is\nYou/We/They + are"
+            },
+            {
+                q: "She ___ from Uzbekistan.",
+                options: ["am", "is", "are"],
+                correct: 1,
+                hint1: "Think about: Which verb do we use with 'She'? Remember: She/He/It all use the same form.",
+                hint2: "The correct answer is: is\n\nRule: She + is, He + is, It + is\nExample: She is a teacher."
+            },
+            {
+                q: "They ___ teachers.",
+                options: ["am", "is", "are"],
+                correct: 2,
+                hint1: "'They' means more than one person. What form do we use for plural?",
+                hint2: "The correct answer is: are\n\nRule: They + are, We + are, You + are\nExample: They are students."
+            }
+        ];
+
+        let currentQ = 0;
+        let score = 0;
+        let attempts = [];
+        let currentAttempt = 0;
+
+        function updateProgress() {
+            const progress = ((currentQ) / questions.length) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
+
+        function createConfetti() {
+            const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8', '#F7DC6F'];
+            const container = document.getElementById('confettiContainer');
+            
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.animationDelay = Math.random() * 0.3 + 's';
+                container.appendChild(confetti);
+                
+                setTimeout(() => confetti.remove(), 2000);
+            }
+        }
+
+        function playSound(isCorrect) {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            if (isCorrect) {
+                oscillator.frequency.value = 800;
+                oscillator.start();
+                oscillator.stop(audioContext.currentTime + 0.15);
+            } else {
+                oscillator.frequency.value = 200;
+                oscillator.start();
+                oscillator.stop(audioContext.currentTime + 0.1);
+            }
+        }
+
+        function showQuestion() {
+            currentAttempt = 0;
+            updateProgress();
+            
+            const content = document.getElementById('quizContent');
+            const question = questions[currentQ];
+            
+            content.innerHTML = `
+                <div class="question-number">Question ${currentQ + 1} of ${questions.length}</div>
+                <div class="question-text">${question.q}</div>
+                <div class="options" id="options"></div>
+                <div id="feedbackArea"></div>
+            `;
+            
+            const optionsDiv = document.getElementById('options');
+            question.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.textContent = opt;
+                btn.onclick = () => checkAnswer(idx);
+                optionsDiv.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selected) {
+            const question = questions[currentQ];
+            const buttons = document.querySelectorAll('.option-btn');
+            const feedbackArea = document.getElementById('feedbackArea');
+            
+            buttons.forEach(btn => btn.disabled = true);
+            
+            if (selected === question.correct) {
+                buttons[selected].classList.add('correct');
+                playSound(true);
+                
+                if (currentAttempt === 0) {
+                    createConfetti();
+                    feedbackArea.innerHTML = `
+                        <div class="feedback success">🎉 Perfect! Great job!</div>
+                        <button class="next-btn" onclick="nextQuestion()">Next Question →</button>
+                    `;
+                    attempts.push({ q: currentQ + 1, status: 'first' });
+                } else {
+                    feedbackArea.innerHTML = `
+                        <div class="feedback success">✓ Correct!</div>
+                        <button class="next-btn" onclick="nextQuestion()">Next Question →</button>
+                    `;
+                    attempts.push({ q: currentQ + 1, status: 'hint' + currentAttempt });
+                }
+                score++;
+            } else {
+                buttons[selected].classList.add('wrong');
+                playSound(false);
+                currentAttempt++;
+                
+                setTimeout(() => {
+                    buttons[selected].classList.remove('wrong');
+                    buttons.forEach(btn => btn.disabled = false);
+                    
+                    if (currentAttempt === 1) {
+                        feedbackArea.innerHTML = `
+                            <div class="feedback error">Not quite! Give it another try!</div>
+                            <button class="explain-btn" onclick="showHint(1)">Explain</button>
+                        `;
+                    } else if (currentAttempt === 2) {
+                        feedbackArea.innerHTML = `
+                            <div class="feedback error">Not quite! One more hint!</div>
+                            <button class="explain-btn" onclick="showHint(2)">Explain</button>
+                        `;
+                    }
+                }, 500);
+            }
+        }
+
+        function showHint(hintNum) {
+            const question = questions[currentQ];
+            const feedbackArea = document.getElementById('feedbackArea');
+            const hintText = hintNum === 1 ? question.hint1 : question.hint2;
+            
+            feedbackArea.innerHTML = `
+                <div class="feedback error">Not quite! Give it another try!</div>
+                <div class="hint-box">
+                    <div class="hint-label">Hint ${hintNum}/2</div>
+                    <div class="hint-text">${hintText}</div>
+                </div>
+            `;
+        }
+
+        function nextQuestion() {
+            currentQ++;
+            if (currentQ < questions.length) {
+                showQuestion();
+            } else {
+                showSummary();
+            }
+        }
+
+        function showSummary() {
+            const content = document.getElementById('quizContent');
+            const firstAttempt = attempts.filter(a => a.status === 'first').length;
+            const percentage = Math.round((score / questions.length) * 100);
+            
+            let message = '';
+            if (percentage >= 90) message = '🎉 Amazing! You\'re a star!';
+            else if (percentage >= 70) message = '🌟 Great job! Well done!';
+            else message = '💪 Good try! Keep practicing!';
+            
+            let detailsHTML = '';
+            attempts.forEach(a => {
+                const icon = a.status === 'first' ? '<span class="check">✓</span>' : '<span class="warning">⚠️</span>';
+                const text = a.status === 'first' ? 'First attempt' : `Needed ${a.status.replace('hint', '')} hint(s)`;
+                detailsHTML += `
+                    <div class="summary-row">
+                        <span>Question ${a.q}: ${icon}</span>
+                        <span>${text}</span>
+                    </div>
+                `;
+            });
+            
+            content.innerHTML = `
+                <div class="summary">
+                    <h2>Quiz Complete!</h2>
+                    <div class="score-big">${score}/${questions.length}</div>
+                    <div class="summary-details">
+                        <div class="summary-row">
+                            <strong>Total Score:</strong>
+                            <strong>${score}/${questions.length} (${percentage}%)</strong>
+                        </div>
+                        <div class="summary-row">
+                            <strong>First Attempt:</strong>
+                            <strong>${firstAttempt}/${questions.length}</strong>
+                        </div>
+                    </div>
+                    <div class="summary-details">
+                        ${detailsHTML}
+                    </div>
+                    <p style="margin: 20px 0; font-size: 18px;">${message}</p>
+                    <button class="next-btn" onclick="restartQuiz()">Try Again</button>
+                </div>
+            `;
+        }
+
+        function restartQuiz() {
+            currentQ = 0;
+            score = 0;
+            attempts = [];
+            showQuestion();
+        }
+
+        showQuestion();
+    </script>
+</body>
+</html>
